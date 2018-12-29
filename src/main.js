@@ -1,12 +1,21 @@
-import Vue from 'vue';
-import App from './App.vue';
-import router from './router';
-import store from './store';
+import Vue from 'vue'
+import './plugins/vuetify'
+import App from './App.vue'
+import router from './router'
+import store from './store'
+import { ipcRenderer as ipc } from 'electron'
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = false
 
 new Vue({
   router,
   store,
   render: h => h(App),
-}).$mount('#app');
+  created() {
+    ipc.send('get-init-state')
+    ipc.on('state-init', (e, state) => {
+      store.dispatch('setDefaultExam', state)
+      store.dispatch('setBusy', false)
+    })
+  }
+}).$mount('#app')

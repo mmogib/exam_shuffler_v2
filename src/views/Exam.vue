@@ -1,53 +1,64 @@
 <template>
-  <v-tabs centered color="cyan" dark icons-and-text>
-    <v-tabs-slider color="yellow"></v-tabs-slider>
-
-    <v-tab href="#tab-1">Setting
-      <v-icon>settings</v-icon>
-    </v-tab>
-
-    <v-tab href="#tab-2">LaTeX
-      <v-icon>school</v-icon>
-    </v-tab>
-
-    <v-tab href="#tab-3">Questions
-      <v-icon>question_answer</v-icon>
-    </v-tab>
-
-    <v-tab-item :value="'tab-1'">
-      <v-card flat class="pa-2">
-        <exam-configuration/>
-      </v-card>
-    </v-tab-item>
-    <v-tab-item :value="'tab-2'">
-      <v-card flat class="pa-2">
-        <latex/>
-      </v-card>
-    </v-tab-item>
-    <v-tab-item :value="'tab-3'">
-      <v-card flat class="pa-2">
-        <questions/>
-      </v-card>
-    </v-tab-item>
-  </v-tabs>
+  <v-stepper v-model="tab">
+    <v-stepper-header>
+      <v-stepper-step :complete="tab > 1" step="1">{{items[0].name}}</v-stepper-step>
+      <v-divider></v-divider>
+      <v-stepper-step :complete="tab > 2" step="2">{{items[1].name}}</v-stepper-step>
+      <v-divider></v-divider>
+      <v-stepper-step step="3">{{items[2].name}}</v-stepper-step>
+    </v-stepper-header>
+    <v-stepper-items>
+      <v-stepper-content step="1">
+        <v-card>
+          <component :tabindex="0" @cancel="tab=1" @nexttab="gototab(1)" v-bind:is="items[0].comp"></component>
+        </v-card>
+      </v-stepper-content>
+      <v-stepper-content step="2">
+        <v-card>
+          <component :tabindex="1" @cancel="tab=1" @nexttab="gototab(2)" v-bind:is="items[1].comp"></component>
+        </v-card>
+      </v-stepper-content>
+      <v-stepper-content step="3">
+        <v-card>
+          <component :tabindex="0" @cancel="tab=1" @nexttab="gototab(3)" v-bind:is="items[2].comp"></component>
+        </v-card>
+      </v-stepper-content>
+    </v-stepper-items>
+  </v-stepper>
 </template>
-
 <script>
 import ExamConfiguration from "@/components/ExamConfiguration.vue"
-import Latex from "@/components/Latex.vue"
+import SaveDownloadExam from "@/components/SaveDownloadExam.vue"
 import Questions from "@/components/Questions.vue"
 
 export default {
   data() {
     return {
-      text:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      tab: 0,
+      items: [
+        {
+          name: "Configuration",
+          icon: "perm_data_setting",
+          comp: ExamConfiguration
+        },
+        { name: "Questions", icon: "question_answer", comp: Questions },
+        { name: "Finalize", icon: "school", comp: SaveDownloadExam }
+      ]
     }
   },
-  components: {
-    ExamConfiguration,
-    Latex,
-    Questions
+  methods: {
+    gototab(val) {
+      this.tab = (val % this.items.length) + 1
+    }
+  },
+  created() {
+    const currentExam = this.$store.getters.getCurrentExam
+    const { exam = null } = currentExam || {
+      exam: null
+    }
+    if (exam === null) {
+      this.$router.push({ name: "home" })
+    }
   }
 }
 </script>

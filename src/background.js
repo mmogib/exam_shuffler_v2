@@ -2,18 +2,26 @@
 
 import { writeFile } from 'fs'
 import { promisify } from 'util'
+import path from 'path'
 
-import { app, protocol, BrowserWindow, ipcMain as ipc } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain as ipc, dialog } from 'electron'
 import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'
 
-import { example_state } from './backend/handlers/example'
 import {
   parse_examdoc,
   examDocument,
   partials,
   initial_state,
-  get_or_create_db
+  get_or_create_db,
+  save_exam,
+  get_item,
+  update_item,
+  save_item,
+  shuffle_exam,
+  add_answer_key,
+  add_answer_counts
 } from './backend/examparser/'
+import { template_exam } from './backend/handlers/template_exam'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -25,7 +33,7 @@ let win, db
 protocol.registerStandardSchemes(['app'], { secure: true })
 function createWindow() {
   // Create the browser window.
-  win = new BrowserWindow({ width: 1024, height: 800 })
+  win = new BrowserWindow({ width: 800, height: 600 })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -89,20 +97,159 @@ if (isDevelopment) {
 
 //// main events
 
-ipc.on('get-state', async e => {
+ipc.on('get-init-state', async e => {
+  const state = await initial_state(db)
+  e.sender.send('state-initiated', state)
+})
+
+ipc.on('download-exam', async (e, examObj, examplePartials) => {
+  const exam = shuffle_exam(examObj)
+  const partials = add_answer_counts(exam, add_answer_key(exam, examplePartials))
   const saveFile = promisify(writeFile)
   try {
     const template = examDocument(partials)
-    const exam = await parse_examdoc(example_state, template)
-    await saveFile('./tessssing.tex', exam)
-    e.sender.send('saved-file')
+    const examFile = await parse_examdoc(exam, template)
+    dialog.showSaveDialog(
+      win,
+      {
+        title: 'Save LaTeX',
+        filters: [{ name: 'LaTeX', extensions: ['tex'] }]
+      },
+      async filename => {
+        if (filename) {
+          await saveFile(filename, examFile)
+        }
+        e.sender.send('not-busy')
+      }
+    )
   } catch (error) {
-    console.log(error)
-    e.sender.send('got-error', error)
+    if (error !== undefined) {
+      dialog.showErrorBox('Error Saving', error.message || error)
+      e.sender.send('not-busy')
+    }
   }
 })
 
-ipc.on('get-init-state', async e => {
-  const state = await initial_state(db)
-  e.sender.send('state-init', state)
+ipc.on('save-exam', (e, exam) => {
+  dialog.showSaveDialog(
+    win,
+    {
+      title: 'Save Exam Setting',
+      filters: [{ name: 'Exam File', extensions: ['exdb'] }]
+    },
+    async filename => {
+      if (filename) {
+        try {
+          const examdb = get_or_create_db(filename)
+          await save_exam(examdb, { ...exam, name: filename })
+          await save_item(db, { name: filename, path: filename, project: true })
+          e.sender.send('exam-saved')
+          e.sender.send('add-project', { name: filename, path: filename })
+        } catch (error) {
+          if (error !== undefined) {
+            dialog.showErrorBox('Error Saving', error.message || error)
+            e.sender.send('not-busy')
+          }
+        }
+      } else {
+        e.sender.send('not-busy')
+      }
+    }
+  )
+})
+
+ipc.on('open-exam', e => {
+  dialog.showOpenDialog(
+    win,
+    {
+      title: 'Save Exam Setting',
+      filters: [{ name: 'Exam File', extensions: ['exdb'] }]
+    },
+    async filename => {
+      if (filename) {
+        try {
+          const examdb = get_or_create_db(path.resolve(filename[0]))
+          const { exam, examPartials } = await get_item(examdb, filename[0])
+          const exm = {
+            name: 'current_exam',
+            exam,
+            examPartials
+          }
+          e.sender.send('exam-opened', exm)
+        } catch (error) {
+          if (error !== undefined) {
+            dialog.showErrorBox('Error', error.message || error)
+            e.sender.send('not-busy')
+          }
+        }
+      } else {
+        e.sender.send('not-busy')
+      }
+    }
+  )
+})
+
+ipc.on('save-setting', async (e, setting) => {
+  try {
+    await update_item(db, { ...setting, name: 'setting' })
+    e.sender.send('setting-saved')
+  } catch (error) {
+    dialog.showErrorBox('Error', error.message || error)
+    e.sender.send('not-busy')
+  }
+})
+
+ipc.on('save-as-default', async (e, exam) => {
+  try {
+    await update_item(db, { ...exam })
+    e.sender.send('default-saved')
+  } catch (error) {
+    dialog.showErrorBox('Error', error.message || error)
+    e.sender.send('not-busy')
+  }
+})
+
+ipc.on('load-project', async (e, filename) => {
+  try {
+    const examdb = get_or_create_db(path.resolve(filename))
+    const { exam, examPartials } = await get_item(examdb, filename)
+    const exm = {
+      name: 'current_exam',
+      exam,
+      examPartials
+    }
+    e.sender.send('exam-opened', exm)
+  } catch (error) {
+    if (error !== undefined) {
+      dialog.showErrorBox('Error', error.message || error)
+      e.sender.send('not-busy')
+    }
+  }
+})
+
+ipc.on('download-template-exam', async e => {
+  const exam = template_exam
+  const saveFile = promisify(writeFile)
+  try {
+    const template = examDocument(partials)
+    const examFile = await parse_examdoc(exam, template)
+    dialog.showSaveDialog(
+      win,
+      {
+        title: 'Save LaTeX',
+        filters: [{ name: 'LaTeX', extensions: ['tex'] }]
+      },
+      async filename => {
+        if (filename) {
+          await saveFile(filename, examFile)
+        }
+        e.sender.send('not-busy')
+      }
+    )
+  } catch (error) {
+    if (error !== undefined) {
+      dialog.showErrorBox('Error Saving', error.message || error)
+      e.sender.send('not-busy')
+    }
+  }
 })

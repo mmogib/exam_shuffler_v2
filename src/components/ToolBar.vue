@@ -5,7 +5,7 @@
         <span class="font-weight-light">Exam Shuffler</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn depressed dark color="rgp(222,205,106)" @click="gotoexam">
+      <v-btn depressed dark color="rgp(222,205,106)" to="/loading/exam/1000">
         <span class="mr-2">New Exam</span>
       </v-btn>
     </v-toolbar>
@@ -18,13 +18,6 @@ import Drawer from "./Drawer"
 export default {
   components: {
     Drawer
-  },
-  methods: {
-    gotoexam() {
-      const exam = this.$store.getters.getDefaultExam
-      this.$store.dispatch("setCurrentExam", exam)
-      this.$router.push({ name: "exam" })
-    }
   }
 }
 </script>

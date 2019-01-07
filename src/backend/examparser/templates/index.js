@@ -1,6 +1,7 @@
 export const firstDraft = (temp) => {
   return temp
 }
+// construct LaTeX document
 export const examDocument = (template) => {
   const {
     preamble,

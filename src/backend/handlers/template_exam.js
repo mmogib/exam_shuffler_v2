@@ -3,8 +3,8 @@ import { settings, config, code, question, questionOtion } from '../examparser'
 // first steps
 const setting = {
   ...settings,
-  Uinversity: 'King Fahd',
-  Department: 'Math'
+  Uinversity: 'Uinversity',
+  Department: 'Uinversity'
 }
 
 const cnfg = {
@@ -57,19 +57,27 @@ const qs = [
   { ...q, questionBody: 'question 3' },
   { ...q, questionBody: 'question 4' },
   { ...q, questionBody: 'question 5' },
-  { ...q, questionBody: 'question 6' }
+  { ...q, questionBody: 'question 6' },
+  { ...q, questionBody: 'question 7' },
+  { ...q, questionBody: 'question 8' },
+  { ...q, questionBody: 'question 9' },
+  { ...q, questionBody: 'question 10' },
+  { ...q, questionBody: 'question 11' },
+  { ...q, questionBody: 'question 12' },
+  { ...q, questionBody: 'question 13' },
+  { ...q, questionBody: 'question 14' },
+  { ...q, questionBody: 'question 15' },
+  { ...q, questionBody: 'question 16' },
+  { ...q, questionBody: 'question 17' },
+  { ...q, questionBody: 'question 18' },
+  { ...q, questionBody: 'question 19' },
+  { ...q, questionBody: 'question 20' }
 ]
 
 const def_code = { ...code, settings: setting, config: cnfg, questions: qs, numOfPages }
 
-const codes = [
-  { ...def_code, master: true, versionName: 'Master' },
-  { ...def_code, versionName: 'CODE001' },
-  { ...def_code, versionName: 'CODE002' },
-  { ...def_code, versionName: 'CODE003' },
-  { ...def_code, versionName: 'CODE004' }
-]
-export const example_state = {
+const codes = [{ ...def_code, master: true, versionName: 'Master' }]
+export const template_exam = {
   codes,
   config: cnfg,
   settings: setting

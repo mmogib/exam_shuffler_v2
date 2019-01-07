@@ -3,7 +3,6 @@ import './plugins/vuetify'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import { ipcRenderer as ipc } from 'electron'
 
 Vue.config.productionTip = false
 
@@ -12,10 +11,6 @@ new Vue({
   store,
   render: h => h(App),
   created() {
-    ipc.send('get-init-state')
-    ipc.on('state-init', (e, state) => {
-      store.dispatch('setDefaultExam', state)
-      store.dispatch('setBusy', false)
-    })
+    store.dispatch('initApp')
   }
 }).$mount('#app')

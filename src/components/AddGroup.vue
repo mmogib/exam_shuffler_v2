@@ -1,7 +1,9 @@
 <template>
   <v-layout row justify-center>
     <v-dialog v-model="dialog" persistent max-width="600px">
-      <v-btn slot="activator" color="primary" dark>Add Group</v-btn>
+      <v-btn slot="activator" small color="primary">Add Group
+        <v-icon>add</v-icon>
+      </v-btn>
       <v-card>
         <v-card-title>
           <span class="headline">Add Group</span>

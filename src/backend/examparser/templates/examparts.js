@@ -108,20 +108,30 @@ export const header = `
 \\setcounter{page}{1}
 `
 
-export const answerkey = `
+const placeHolder = `
+\\begin{tabular}{|c||c|c|c|c|c|c|}
+\\hline
+V & a & b & c & d & e \\\\ \\hline 
+1 & 4 & 2 & 3 & 9 & 2 \\\\ \\hline
+2 & 2 & 4 & 7 & 3 & 4 \\\\ \\hline
+3 & 3 & 3 & 4 & 7 & 3 \\\\ \\hline
+4 & 2 & 6 & 3 & 2 & 7 \\\\ \\hline
+\\end{tabular}
+`
+export const answerkey = (key = '...') => `
 \\renewcommand{\\thepage}{\\noindent {{config.courseCode}}, {{config.Term}}, {{config.examTitle}} \\hfill {\\bf \\fbox{Answer KEY}}}
 \\begin{normalsize}
 \\setcounter{page}{1}
 \\vspace {1cm}
 
 \\begin{center}
-    GVAR ANSWER KEY
+${key}
 \\end{center}
 \\end{normalsize}
 
 `
 
-export const answercount = `
+export const answercount = (key = '...') => `
 \\renewcommand{\\thepage}{\\noindent {{config.courseCode}}, {{config.Term}}, {{config.examTitle}} \\hfill {\\bf \\fbox{Answer Counts}}}
 \\begin{normalsize}
 \\begin{center}
@@ -131,14 +141,7 @@ export const answercount = `
 Answer Counts \\\\
 \\end{Large}
 \\vspace {1cm}
-\\begin{tabular}{|c||c|c|c|c|c|c|}
-\\hline
-V & a & b & c & d & e \\\\ \\hline \\hline
-1 & 4 & 2 & 3 & 9 & 2 \\\\ \\hline
-2 & 2 & 4 & 7 & 3 & 4 \\\\ \\hline
-3 & 3 & 3 & 4 & 7 & 3 \\\\ \\hline
-4 & 2 & 6 & 3 & 2 & 7 \\\\ \\hline
-\\end{tabular}
+${key}
 \\end{center}
 \\end{normalsize}
 `

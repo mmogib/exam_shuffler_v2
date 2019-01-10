@@ -1,6 +1,15 @@
 <template>
   <v-navigation-drawer fixed clipped app :permanent="true" width="200">
     <v-list dense>
+      <v-list-tile @click="gohome">
+        <v-list-tile-action>
+          <v-icon>home</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>Home</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+
       <v-list-tile @click="newexam">
         <v-list-tile-action>
           <v-icon>save</v-icon>
@@ -23,6 +32,22 @@
         </v-list-tile-action>
         <v-list-tile-content>
           <v-list-tile-title>Settings</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+      <v-list-tile @click="closeApp">
+        <v-list-tile-action>
+          <v-icon>power_settings_new</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>Quit</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+      <v-list-tile @click="checkUpdate">
+        <v-list-tile-action>
+          <v-icon>update</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>Check for Updates</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
       <v-subheader class="mt-3 grey--text text--darken-1">Projects</v-subheader>
@@ -84,6 +109,12 @@ export default {
     }
   },
   methods: {
+    gohome() {
+      this.$router.push({
+        name: "loading",
+        params: { to: "home", duration: 2000 }
+      })
+    },
     newexam() {
       this.$router.push({
         name: "loading",
@@ -103,6 +134,12 @@ export default {
     },
     extend() {
       this.projectsToDisplay = this.projectsToDisplay * 2
+    },
+    closeApp() {
+      this.$store.dispatch("closeApp")
+    },
+    checkUpdate() {
+      this.$store.dispatch("updateApp")
     }
   }
 }

@@ -122,6 +122,12 @@ export default new Vuex.Store({
     },
     downloadTemplateExam() {
       ipc.send('download-template-exam')
+    },
+    closeApp() {
+      ipc.send('close-app')
+    },
+    updateApp() {
+      ipc.send('update-app')
     }
   }
 })

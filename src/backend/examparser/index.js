@@ -1,4 +1,3 @@
-import path from 'path'
 import Datastore from 'nedb'
 
 import shuffle from 'lodash/shuffle'
@@ -18,10 +17,34 @@ import {
 } from './templates/examparts'
 
 export const settings = {
-  University: 'University Name',
-  Department: 'Department Name'
+  University: 'Kink Fahd University of Petroleum and Minerals',
+  Department: 'Mathematics and Statistics'
 }
 
+export const currentSem = () => {
+  const now = new Date()
+  const month = now.getMonth() + 1
+  let year = parseInt(
+    now
+      .getFullYear()
+      .toString()
+      .substr(2.2)
+  )
+  let sem
+  if (month >= 1 && month < 9) {
+    year--
+  }
+
+  if (month >= 1 && month < 6) {
+    sem = 2
+  } else if (month >= 6 && month < 9) {
+    sem = 3
+  } else {
+    sem = 1
+  }
+  year *= 10
+  return year + sem
+}
 export const config = {
   courseCode: '',
   examDate: '',
@@ -30,11 +53,7 @@ export const config = {
   numOfAnswers: 5,
   numOfQuestions: 0,
   numOfVersions: 4,
-  Term:
-    new Date()
-      .getFullYear()
-      .toString()
-      .substr(2, 2) + '1',
+  Term: currentSem(),
   TimeAllowed: ''
 }
 
@@ -171,8 +190,7 @@ export const save_exam = async (db, exam) => {
     return new_item(db, exam)
   }
 }
-export const get_or_create_db = (file = null) => {
-  const filename = file || path.join(process.env['APPDATA'], '/shuffler/database.db')
+export const get_or_create_db = filename => {
   return new Datastore({
     filename,
     autoload: true,

@@ -1,18 +1,24 @@
 {
   "name": "exam_shuffler_v2",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
   "description": "This exam shuffler",
   "author": "Mohammed Alshaharni",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mmogib/exam_shuffler_v2.git"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build",
+    "release": "electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "electron-updater": "^4.0.6",
     "lodash": "^4.17.11",
     "moment": "^2.23.0",
     "nedb": "^1.8.0",

@@ -4,8 +4,9 @@ import { writeFile } from 'fs'
 import { promisify } from 'util'
 import path from 'path'
 
-import { app, protocol, BrowserWindow, ipcMain as ipc, dialog } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain as ipc, dialog, screen } from 'electron'
 import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'
+import { autoUpdater } from 'electron-updater'
 
 import {
   parse_examdoc,
@@ -28,12 +29,16 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win, db
+const dbFile = isDevelopment
+  ? path.resolve(__dirname, 'database.db')
+  : path.join(process.env['APPDATA'], '/.shuffler/database.db')
 
 // Standard scheme must be registered before the app is ready
 protocol.registerStandardSchemes(['app'], { secure: true })
 function createWindow() {
   // Create the browser window.
-  win = new BrowserWindow({ width: 800, height: 600 })
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize
+  win = new BrowserWindow({ width, height })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -63,7 +68,7 @@ app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (win === null) {
-    db = get_or_create_db()
+    db = get_or_create_db(dbFile)
     createWindow()
   }
 })
@@ -76,7 +81,7 @@ app.on('ready', async () => {
     // Install Vue Devtools
     await installVueDevtools()
   }
-  db = get_or_create_db()
+  db = get_or_create_db(dbFile)
   createWindow()
 })
 
@@ -252,4 +257,12 @@ ipc.on('download-template-exam', async e => {
       e.sender.send('not-busy')
     }
   }
+})
+
+ipc.on('close-app', () => {
+  app.quit()
+})
+
+ipc.on('update-app', () => {
+  autoUpdater.checkForUpdatesAndNotify()
 })

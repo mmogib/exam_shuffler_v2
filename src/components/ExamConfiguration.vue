@@ -50,10 +50,9 @@
       @blur="$v.numOfVersions.$touch()"
     ></v-text-field>
     <v-layout row wrap>
-      <v-flex xs12 md6 class="px-1">
+      <v-flex xs12 class="px-1">
         <v-btn dark color="rgb(2,126,64)" @click="submit">Continue</v-btn>
         <v-btn flat @click="clear">Clear</v-btn>
-        <v-btn flat @click="cancel">Cancel</v-btn>
       </v-flex>
     </v-layout>
   </form>

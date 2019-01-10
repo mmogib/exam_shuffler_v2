@@ -50,12 +50,23 @@ const options = [
   }
 ]
 const q = { ...question, options }
+const figuteBox = `
+In the figure,
+\\begin{textblock}{50}(90,1) % 90 is x coordinate, 1 is y coordinate
+you include your figure here using the command
+{\\tiny 
+\\begin{verbatim}
+\\includegraphics[scale=0.5]{universe}
+\\end{verbatim}
+}
+\\end{textblock}
 
+`
 const qs = [
   { ...q, questionBody: 'question 1' },
-  { ...q, questionBody: 'question 2' },
+  { ...q, questionBody: figuteBox },
   { ...q, questionBody: 'question 3' },
-  { ...q, questionBody: 'question 4' },
+  { ...q, questionBody: figuteBox },
   { ...q, questionBody: 'question 5' },
   { ...q, questionBody: 'question 6' },
   { ...q, questionBody: 'question 7' },

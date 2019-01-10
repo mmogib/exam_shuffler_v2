@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="font-weight-regular">
     <div>
       <tool-bar/>
       <v-content class="ma-2">

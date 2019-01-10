@@ -10,6 +10,14 @@ module.exports = {
         nsis: {
           oneClick: false,
           allowToChangeInstallationDirectory: true
+        },
+        publish: {
+          provider: 'github',
+          owner: 'Dr. Mohammed Alshahrani',
+          vPrefixedTagName: true,
+          token: process.env.GH_TOKEN,
+          private: true,
+          publishAutoUpdate: true
         }
       }
     }

@@ -1,4 +1,8 @@
 export const preamble = `\\documentclass[amsfonts,bezier,leqno,fleqn,12pt,a4paper]{article}
+\\usepackage{graphicx}
+\\usepackage[overlay]{textpos}
+\\setlength{\\TPHorizModule}{1mm}
+\\setlength{\\TPVertModule}{1mm}
 \\topmargin=-.75in
 \\textheight=26.5cm
 \\footskip=.3in

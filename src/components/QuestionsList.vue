@@ -5,7 +5,7 @@
       <v-btn @click="none">Collapse</v-btn>
     </div>
     <v-layout row wrap>
-      <v-flex xs12 lg5 mb-3>
+      <v-flex xs12 mb-3>
         <v-expansion-panel v-model="panel" popout expand>
           <v-expansion-panel-content v-for="(item,i) in questions" :key="i">
             <div slot="header">Question {{i+1}}</div>

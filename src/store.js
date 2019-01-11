@@ -61,6 +61,9 @@ export default new Vuex.Store({
       ipc.on('add-project', (e, project) => {
         dispatch('addProject', project)
       })
+      ipc.on('update-message', (e, message) => {
+        console.log(message)
+      })
     },
     setBusy({ commit }, busy) {
       commit('SET_BUSY', busy)

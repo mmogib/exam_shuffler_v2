@@ -1,6 +1,6 @@
 {
   "name": "exam_shuffler_v2",
-  "version": "2.1.0",
+  "version": "2.0.1",
   "private": true,
   "description": "This exam shuffler",
   "author": "Mohammed Alshaharni",
@@ -12,12 +12,13 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build",
+    "electron:build": "vue-cli-service electron:build -p onTagOrDraft",
     "release": "electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "electron-log": "^2.2.17",
     "electron-updater": "^4.0.6",
     "lodash": "^4.17.11",
     "moment": "^2.23.0",

@@ -7,6 +7,7 @@ import path from 'path'
 import { app, protocol, BrowserWindow, ipcMain as ipc, dialog, screen } from 'electron'
 import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'
 import { autoUpdater } from 'electron-updater'
+import * as log from 'electron-log'
 
 import {
   parse_examdoc,
@@ -73,6 +74,44 @@ app.on('activate', () => {
   }
 })
 
+//-------------------------------------------------------------------
+// Logging
+//
+//
+// This logging setup is not required for auto-updates to work,
+// but it sure makes debugging easier :)
+//-------------------------------------------------------------------
+autoUpdater.logger = log
+autoUpdater.logger.transports.file.level = 'info'
+log.info('App starting...')
+
+const sendStatusToWindow = text => {
+  log.info(text)
+  win.webContents.send('update-message', text)
+}
+autoUpdater.on('checking-for-update', () => {
+  sendStatusToWindow('Checking for update...')
+})
+autoUpdater.on('update-available', info => {
+  sendStatusToWindow('Update available.')
+})
+autoUpdater.on('update-not-available', info => {
+  sendStatusToWindow('Update not available.')
+})
+autoUpdater.on('error', err => {
+  sendStatusToWindow('Error in auto-updater. ' + err)
+})
+autoUpdater.on('download-progress', progressObj => {
+  let log_message = 'Download speed: ' + progressObj.bytesPerSecond
+  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%'
+  log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')'
+  sendStatusToWindow(log_message)
+})
+autoUpdater.on('update-downloaded', info => {
+  sendStatusToWindow('Update downloaded')
+})
+///////// end of autoUpdate
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -82,6 +121,7 @@ app.on('ready', async () => {
     await installVueDevtools()
   }
   db = get_or_create_db(dbFile)
+  autoUpdater.checkForUpdatesAndNotify()
   createWindow()
 })
 
@@ -101,7 +141,6 @@ if (isDevelopment) {
 }
 
 //// main events
-
 ipc.on('get-init-state', async e => {
   const state = await initial_state(db)
   e.sender.send('state-initiated', state)
@@ -262,7 +301,6 @@ ipc.on('download-template-exam', async e => {
 ipc.on('close-app', () => {
   app.quit()
 })
-
 ipc.on('update-app', () => {
-  autoUpdater.checkForUpdatesAndNotify()
+  sendStatusToWindow('message from update-app')
 })

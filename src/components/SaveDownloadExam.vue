@@ -16,7 +16,7 @@
             </div>
           </v-card-title>
           <v-card-actions>
-            <v-btn flat dark @click="save">Save</v-btn>
+            <v-btn flat dark>Save</v-btn>
           </v-card-actions>
         </v-card>
       </v-hover>
@@ -37,7 +37,7 @@
             </div>
           </v-card-title>
           <v-card-actions>
-            <v-btn flat dark @click="download">Download</v-btn>
+            <v-btn flat dark>Download</v-btn>
           </v-card-actions>
         </v-card>
       </v-hover>
@@ -58,7 +58,7 @@
             </div>
           </v-card-title>
           <v-card-actions>
-            <v-btn flat dark @click="savedefault">Make Default</v-btn>
+            <v-btn flat dark>Make Default</v-btn>
           </v-card-actions>
         </v-card>
       </v-hover>
@@ -79,7 +79,7 @@
             </div>
           </v-card-title>
           <v-card-actions>
-            <v-btn flat dark @click="startover">Start Over</v-btn>
+            <v-btn flat dark>Start Over</v-btn>
           </v-card-actions>
         </v-card>
       </v-hover>

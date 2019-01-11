@@ -24,7 +24,8 @@
         <loading v-if="isBusy"/>
       </v-flex>
       <v-flex xs12>
-        <v-card>
+        <v-card v-if="updateMessage">
+          <v-card-title class="subheader">Update Message</v-card-title>
           <v-card-text>{{updateMessage}}</v-card-text>
         </v-card>
       </v-flex>

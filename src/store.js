@@ -7,6 +7,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    update_message: null,
     busy: false,
     setting: null,
     default_exam: null,
@@ -14,6 +15,7 @@ export default new Vuex.Store({
     projects: [] // array of exams
   },
   getters: {
+    getUpdateMessage: ({ update_message }) => update_message,
     isBusy: ({ busy }) => busy,
     getSetting: ({ setting }) => setting,
     getDefaultExam: ({ default_exam }) => default_exam,
@@ -21,6 +23,7 @@ export default new Vuex.Store({
     getProjects: ({ projects }) => projects
   },
   mutations: {
+    SET_UPDATE_MESSAGE: (state, msg) => (state.update_message = msg),
     SET_BUSY: (state, busy) => (state.busy = busy),
     SET_SETTING: (state, setting) => (state.setting = setting),
     SET_DEFAULT_EXAM: (state, exam) => (state.default_exam = exam),
@@ -62,8 +65,11 @@ export default new Vuex.Store({
         dispatch('addProject', project)
       })
       ipc.on('update-message', (e, message) => {
-        console.log(message)
+        dispatch('setUpdateMessage', message)
       })
+    },
+    setUpdateMessage({ commit }, msg) {
+      commit('SET_UPDATE_MESSAGE', msg)
     },
     setBusy({ commit }, busy) {
       commit('SET_BUSY', busy)

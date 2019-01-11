@@ -23,6 +23,11 @@
       <v-flex xs12>
         <loading v-if="isBusy"/>
       </v-flex>
+      <v-flex xs12>
+        <v-card>
+          <v-card-text>{{updateMessage}}</v-card-text>
+        </v-card>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -35,6 +40,9 @@ export default {
   },
   name: "home",
   computed: {
+    updateMessage() {
+      return this.$store.getters.getUpdateMessage
+    },
     isBusy() {
       return this.$store.getters.isBusy
     }

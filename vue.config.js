@@ -21,10 +21,9 @@ module.exports = {
 
         publish: {
           provider: 'github',
-          owner: 'Dr. Mohammed Alshahrani',
+          owner: 'mmogib',
           vPrefixedTagName: true,
-          token: '7d8f464c693e7e0853dab4f761760b1a05eb529f',
-          private: true,
+          //token: process.env.GH_TOKEN,
           publishAutoUpdate: true
         }
       }

@@ -121,7 +121,7 @@ app.on('ready', async () => {
     await installVueDevtools()
   }
   db = get_or_create_db(dbFile)
-  autoUpdater.checkForUpdatesAndNotify()
+  setTimeout(() => autoUpdater.checkForUpdatesAndNotify(), 10000)
   createWindow()
 })
 

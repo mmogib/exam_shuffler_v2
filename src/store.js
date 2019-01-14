@@ -67,6 +67,9 @@ export default new Vuex.Store({
       ipc.on('update-message', (e, message) => {
         dispatch('setUpdateMessage', message)
       })
+      ipc.on('update-available', (e, message) => {
+        ipc.send('download-update', message)
+      })
     },
     setUpdateMessage({ commit }, msg) {
       commit('SET_UPDATE_MESSAGE', msg)

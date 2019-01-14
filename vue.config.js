@@ -4,7 +4,7 @@ module.exports = {
       builderOptions: {
         // options placed here will be merged with default configuration and passed to electron-builder
         appId: 'mshahrani.shuffler.app',
-        productName: 'shuffler',
+        productName: 'Shuffler',
         icon: './src/assets/icon.png',
         win: {
           target: [
@@ -22,8 +22,11 @@ module.exports = {
         publish: {
           provider: 'github',
           owner: 'mmogib',
+          repo: 'exam_shuffler_v2',
           vPrefixedTagName: true,
           //token: process.env.GH_TOKEN,
+          //private: true,
+          releaseType: 'release',
           publishAutoUpdate: true
         }
       }

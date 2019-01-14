@@ -81,6 +81,7 @@ app.on('activate', () => {
 // This logging setup is not required for auto-updates to work,
 // but it sure makes debugging easier :)
 //-------------------------------------------------------------------
+autoUpdater.autoDownload = false
 autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
 log.info('App starting...')
@@ -94,6 +95,7 @@ autoUpdater.on('checking-for-update', () => {
 })
 autoUpdater.on('update-available', info => {
   sendStatusToWindow('Update available.')
+  win.webContents.send('update-available', 'yes')
 })
 autoUpdater.on('update-not-available', info => {
   sendStatusToWindow('Update not available.')
@@ -109,6 +111,11 @@ autoUpdater.on('download-progress', progressObj => {
 })
 autoUpdater.on('update-downloaded', info => {
   sendStatusToWindow('Update downloaded')
+  autoUpdater.quitAndInstall()
+})
+ipc.on('download-update', (e, msg) => {
+  sendStatusToWindow('Sarting download .... ' + msg)
+  autoUpdater.downloadUpdate()
 })
 ///////// end of autoUpdate
 

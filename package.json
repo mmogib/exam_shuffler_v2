@@ -1,8 +1,8 @@
 {
   "name": "exam_shuffler_v2",
-  "version": "2.0.9",
+  "version": "2.1.10",
   "private": true,
-  "description": "This exam shuffler",
+  "description": "This is an application that shuffls questions of MCQ questions.",
   "author": "Mohammed Alshaharni",
   "repository": {
     "type": "git",

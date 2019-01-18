@@ -24,10 +24,7 @@
         <loading v-if="isBusy"/>
       </v-flex>
       <v-flex xs12>
-        <v-card v-if="updateMessage">
-          <v-card-title class="subheader">Update Message</v-card-title>
-          <v-card-text>{{updateMessage}}</v-card-text>
-        </v-card>
+        <update-available/>
       </v-flex>
     </v-layout>
   </v-container>
@@ -35,15 +32,14 @@
 
 <script>
 import Loading from "@/components/Loading.vue"
+import UpdateAvailable from "@/components/UpdateAvailable.vue"
 export default {
   components: {
-    Loading
+    Loading,
+    UpdateAvailable
   },
   name: "home",
   computed: {
-    updateMessage() {
-      return this.$store.getters.getUpdateMessage
-    },
     isBusy() {
       return this.$store.getters.isBusy
     }

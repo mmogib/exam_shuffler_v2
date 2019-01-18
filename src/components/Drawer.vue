@@ -1,5 +1,7 @@
 <template>
-  <v-navigation-drawer fixed clipped app :permanent="true" width="200">
+  <v-navigation-drawer fixed clipped app :permanent="true" width="180">
+    <download-progress v-if="downloading" class="mx-2"/>
+
     <v-list dense>
       <v-list-tile @click="gohome">
         <v-list-tile-action>
@@ -42,14 +44,7 @@
           <v-list-tile-title>Quit</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
-      <v-list-tile @click="checkUpdate">
-        <v-list-tile-action>
-          <v-icon>update</v-icon>
-        </v-list-tile-action>
-        <v-list-tile-content>
-          <v-list-tile-title>Check for Updates</v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
+
       <v-subheader class="mt-3 grey--text text--darken-1">Projects</v-subheader>
       <v-list>
         <v-list-tile v-for="project in projects" :key="project._id" @click="loadProject(project)">
@@ -78,12 +73,19 @@
 </template>
 
 <script>
+import DownloadProgress from "@/components/DownloadProgress.vue"
 export default {
   props: ["drawer"],
+  components: {
+    DownloadProgress
+  },
   data: () => ({
     projectsToDisplay: 5
   }),
   computed: {
+    downloading() {
+      return this.$store.getters.isDownloading
+    },
     projects() {
       const savedProjects = this.$store.getters.getProjects || []
       const projects = savedProjects.sort((a, b) => {
@@ -137,9 +139,6 @@ export default {
     },
     closeApp() {
       this.$store.dispatch("closeApp")
-    },
-    checkUpdate() {
-      this.$store.dispatch("updateApp")
     }
   }
 }

@@ -86,6 +86,10 @@ autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
 log.info('App starting...')
 
+const fix = (val, digits = 2) => {
+  const mult = Math.pow(10, digits)
+  return Math.round(mult * val) / mult
+}
 const sendStatusToWindow = text => {
   log.info(text)
   win.webContents.send('update-message', text)
@@ -104,10 +108,17 @@ autoUpdater.on('error', err => {
   sendStatusToWindow('Error in auto-updater. ' + err)
 })
 autoUpdater.on('download-progress', progressObj => {
+  const downloadObj = {
+    rate: fix(parseFloat(progressObj.bytesPerSecond) / 1000, 2),
+    percent: fix(parseFloat(progressObj.percent), 2),
+    transferred: fix(parseFloat(progressObj.transferred) / 1000000, 2),
+    total: fix(parseFloat(progressObj.total) / 1000000, 2)
+  }
   let log_message = 'Download speed: ' + progressObj.bytesPerSecond
   log_message = log_message + ' - Downloaded ' + progressObj.percent + '%'
   log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')'
   sendStatusToWindow(log_message)
+  win.webContents.send('download-progressing', downloadObj)
 })
 autoUpdater.on('update-downloaded', info => {
   sendStatusToWindow('Update downloaded')

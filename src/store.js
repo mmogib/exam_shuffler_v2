@@ -8,6 +8,15 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     update_message: null,
+    version: '2.1.0',
+    update_available: false,
+    downloadObject: {
+      rate: 0,
+      percent: 0,
+      transferred: 0,
+      total: 0
+    },
+    downloading: false,
     busy: false,
     setting: null,
     default_exam: null,
@@ -16,6 +25,10 @@ export default new Vuex.Store({
   },
   getters: {
     getUpdateMessage: ({ update_message }) => update_message,
+    getVersion: ({ version }) => version,
+    isUpdateAvailable: ({ update_available }) => update_available,
+    getDownloadObject: ({ downloadObject }) => downloadObject,
+    isDownloading: ({ downloading }) => downloading,
     isBusy: ({ busy }) => busy,
     getSetting: ({ setting }) => setting,
     getDefaultExam: ({ default_exam }) => default_exam,
@@ -24,6 +37,10 @@ export default new Vuex.Store({
   },
   mutations: {
     SET_UPDATE_MESSAGE: (state, msg) => (state.update_message = msg),
+    SET_VERSION: (state, version) => (state.version = version),
+    SET_UPDATE_AVAILABLE: (state, update_available) => (state.update_available = update_available),
+    SET_DOWNLOAD_OBJECT: (state, payload) => (state.downloadObject = payload),
+    SET_DOWNLOADING: (state, payload) => (state.downloading = payload),
     SET_BUSY: (state, busy) => (state.busy = busy),
     SET_SETTING: (state, setting) => (state.setting = setting),
     SET_DEFAULT_EXAM: (state, exam) => (state.default_exam = exam),
@@ -38,6 +55,8 @@ export default new Vuex.Store({
       router.push({ name: 'home' })
       ipc.send('get-init-state')
       dispatch('setBusy', true)
+      dispatch('setUpdateAvailable', false)
+      dispatch('setDownloading', false)
       ipc.on('state-initiated', (e, { default_exam, setting, projects }) => {
         dispatch('setDefaultExam', default_exam)
         dispatch('setSetting', setting)
@@ -68,11 +87,26 @@ export default new Vuex.Store({
         dispatch('setUpdateMessage', message)
       })
       ipc.on('update-available', (e, message) => {
-        ipc.send('download-update', message)
+        dispatch('setUpdateAvailable', true)
+      })
+      ipc.on('download-progressing', (e, obj) => {
+        dispatch('setDownloadObject', obj)
       })
     },
     setUpdateMessage({ commit }, msg) {
       commit('SET_UPDATE_MESSAGE', msg)
+    },
+    setVersion({ commit }, version) {
+      commit('SET_VERSION', version)
+    },
+    setUpdateAvailable({ commit }, payload) {
+      commit('SET_UPDATE_AVAILABLE', payload)
+    },
+    setDownloadObject({ commit }, payload) {
+      commit('SET_DOWNLOAD_OBJECT', payload)
+    },
+    setDownloading({ commit }, payload) {
+      commit('SET_DOWNLOADING', payload)
     },
     setBusy({ commit }, busy) {
       commit('SET_BUSY', busy)
@@ -140,6 +174,10 @@ export default new Vuex.Store({
     },
     updateApp() {
       ipc.send('update-app')
+    },
+    downloadUpdate({ dispatch }) {
+      dispatch('setDownloading', true)
+      ipc.send('download-update')
     }
   }
 })

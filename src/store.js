@@ -17,6 +17,7 @@ export default new Vuex.Store({
       total: 0
     },
     downloading: false,
+    latexfilename: null,
     busy: false,
     setting: null,
     default_exam: null,
@@ -29,6 +30,7 @@ export default new Vuex.Store({
     isUpdateAvailable: ({ update_available }) => update_available,
     getDownloadObject: ({ downloadObject }) => downloadObject,
     isDownloading: ({ downloading }) => downloading,
+    getLatexFilename: ({ latexfilename }) => latexfilename,
     isBusy: ({ busy }) => busy,
     getSetting: ({ setting }) => setting,
     getDefaultExam: ({ default_exam }) => default_exam,
@@ -41,6 +43,7 @@ export default new Vuex.Store({
     SET_UPDATE_AVAILABLE: (state, update_available) => (state.update_available = update_available),
     SET_DOWNLOAD_OBJECT: (state, payload) => (state.downloadObject = payload),
     SET_DOWNLOADING: (state, payload) => (state.downloading = payload),
+    SET_LATEX_FILENAME: (state, payload) => (state.latexfilename = payload),
     SET_BUSY: (state, busy) => (state.busy = busy),
     SET_SETTING: (state, setting) => (state.setting = setting),
     SET_DEFAULT_EXAM: (state, exam) => (state.default_exam = exam),
@@ -92,6 +95,12 @@ export default new Vuex.Store({
       ipc.on('download-progressing', (e, obj) => {
         dispatch('setDownloadObject', obj)
       })
+      ipc.on('set-latex-file-path', (e, filepath) => {
+        dispatch('setLatexFilename', filepath)
+      })
+      ipc.on('pdf-generated', (e, filename) => {
+        dispatch('setBusy', false)
+      })
     },
     setUpdateMessage({ commit }, msg) {
       commit('SET_UPDATE_MESSAGE', msg)
@@ -107,6 +116,9 @@ export default new Vuex.Store({
     },
     setDownloading({ commit }, payload) {
       commit('SET_DOWNLOADING', payload)
+    },
+    setLatexFilename({ commit }, payload) {
+      commit('SET_LATEX_FILENAME', payload)
     },
     setBusy({ commit }, busy) {
       commit('SET_BUSY', busy)
@@ -137,7 +149,8 @@ export default new Vuex.Store({
     setProjects({ commit }, projects) {
       commit('SET_PROJECTS', projects)
     },
-    downloadExam({ state }) {
+    downloadExam({ state, dispatch }) {
+      dispatch('setLatexFilename', null)
       const {
         current_exam: { exam, examPartials }
       } = state
@@ -178,6 +191,9 @@ export default new Vuex.Store({
     downloadUpdate({ dispatch }) {
       dispatch('setDownloading', true)
       ipc.send('download-update')
+    },
+    processLatexFile({ state: { latexfilename } }) {
+      ipc.send('process-latex-exam', latexfilename)
     }
   }
 })

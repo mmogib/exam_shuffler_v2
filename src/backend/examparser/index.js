@@ -289,7 +289,7 @@ V & a & b & c & d & e \\\\ \\hline
 \\end{tabular}
 `
 */
-const alphabets = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']
+const alphabets = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I','J', 'K', 'L']
 export const add_answer_key = (exam, partials) => {
   const {
     config: { numOfQuestions, numOfVersions },

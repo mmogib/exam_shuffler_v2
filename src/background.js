@@ -1,8 +1,9 @@
 'use strict'
 
-import { writeFile } from 'fs'
+import { writeFile, createReadStream, createWriteStream } from 'fs'
 import { promisify } from 'util'
 import path from 'path'
+import * as latex from 'node-latex'
 
 import { app, protocol, BrowserWindow, ipcMain as ipc, dialog, screen } from 'electron'
 import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'
@@ -164,7 +165,7 @@ ipc.on('get-init-state', async e => {
   e.sender.send('state-initiated', state)
 })
 
-ipc.on('download-exam', async (e, examObj, examplePartials) => {
+const donwloadexam = async (e, examObj, examplePartials) => {
   const exam = shuffle_exam(examObj)
   const partials = add_answer_counts(exam, add_answer_key(exam, examplePartials))
   const saveFile = promisify(writeFile)
@@ -180,6 +181,7 @@ ipc.on('download-exam', async (e, examObj, examplePartials) => {
       async filename => {
         if (filename) {
           await saveFile(filename, examFile)
+          e.sender.send('set-latex-file-path', filename)
         }
         e.sender.send('not-busy')
       }
@@ -190,6 +192,19 @@ ipc.on('download-exam', async (e, examObj, examplePartials) => {
       e.sender.send('not-busy')
     }
   }
+}
+ipc.on('download-exam', donwloadexam)
+ipc.on('process-latex-exam', (e, filename) => {
+  const base = path.basename(filename, '.tex')
+  const outfile = `${path.dirname(filename)}/${base}.pdf`
+  const input = createReadStream(filename)
+  const output = createWriteStream(outfile)
+  const pdf = latex(input)
+  pdf.pipe(output)
+  pdf.on('error', err => console.error(err))
+  pdf.on('finish', () => {
+    e.sender.send('pdf-generated', outfile)
+  })
 })
 
 ipc.on('save-exam', (e, exam) => {

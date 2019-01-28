@@ -98,9 +98,6 @@ export default new Vuex.Store({
       ipc.on('set-latex-file-path', (e, filepath) => {
         dispatch('setLatexFilename', filepath)
       })
-      ipc.on('pdf-generated', (e, filename) => {
-        dispatch('setBusy', false)
-      })
     },
     setUpdateMessage({ commit }, msg) {
       commit('SET_UPDATE_MESSAGE', msg)

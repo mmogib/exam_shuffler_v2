@@ -194,18 +194,6 @@ const donwloadexam = async (e, examObj, examplePartials) => {
   }
 }
 ipc.on('download-exam', donwloadexam)
-ipc.on('process-latex-exam', (e, filename) => {
-  const base = path.basename(filename, '.tex')
-  const outfile = `${path.dirname(filename)}/${base}.pdf`
-  const input = createReadStream(filename)
-  const output = createWriteStream(outfile)
-  const pdf = latex(input)
-  pdf.pipe(output)
-  pdf.on('error', err => console.error(err))
-  pdf.on('finish', () => {
-    e.sender.send('pdf-generated', outfile)
-  })
-})
 
 ipc.on('save-exam', (e, exam) => {
   dialog.showSaveDialog(
@@ -246,7 +234,7 @@ ipc.on('open-exam', e => {
       if (filename) {
         try {
           const examdb = get_or_create_db(path.resolve(filename[0]))
-          const { exam, examPartials } = await get_item(examdb, filename[0])
+          const { exam, examPartials } = await get_item(examdb)
           const exm = {
             name: 'current_exam',
             exam,
@@ -289,7 +277,7 @@ ipc.on('save-as-default', async (e, exam) => {
 ipc.on('load-project', async (e, filename) => {
   try {
     const examdb = get_or_create_db(path.resolve(filename))
-    const { exam, examPartials } = await get_item(examdb, filename)
+    const { exam, examPartials } = await get_item(examdb)
     const exm = {
       name: 'current_exam',
       exam,

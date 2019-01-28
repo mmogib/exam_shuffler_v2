@@ -103,12 +103,12 @@ export const item_exists = (db, name) => {
   })
 }
 
-export const get_item = (db, name) => {
+export const get_item = (db, where = {}) => {
   return new Promise((resolve, reject) => {
-    db.find({ name }, (err, docs) => {
+    db.find({ ...where }, (err, docs) => {
       if (err) reject(err)
       if (docs.length === 0) {
-        reject(new Error(`${name} not found..`))
+        reject(new Error(`Not found..`))
       } else {
         resolve(docs[0])
       }
@@ -200,7 +200,7 @@ export const get_or_create_db = filename => {
 
 export const initial_state = async db => {
   try {
-    const default_exam = await get_item(db, 'default_exam')
+    const default_exam = await get_item(db, { name: 'default_exam' })
     const setting = await get_setting(db)
     const projects = (await get_projects(db)) || []
     return { default_exam, setting, projects }
@@ -289,7 +289,7 @@ V & a & b & c & d & e \\\\ \\hline
 \\end{tabular}
 `
 */
-const alphabets = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I','J', 'K', 'L']
+const alphabets = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
 export const add_answer_key = (exam, partials) => {
   const {
     config: { numOfQuestions, numOfVersions },

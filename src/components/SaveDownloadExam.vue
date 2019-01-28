@@ -85,27 +85,6 @@
       </v-hover>
     </v-flex>
     <v-flex xs12 class="pa-1">
-      <v-hover>
-        <v-card
-          color="deep-purple darken-2"
-          class="white--text"
-          slot-scope="{ hover }"
-          :class="`elevation-${hover ? 12 : 2} clickable`"
-          @click="processexam"
-        >
-          <v-card-title primary-title>
-            <div>
-              <div class="headline">Process Exam</div>
-              <span>to process the exam and preview</span>
-            </div>
-          </v-card-title>
-          <v-card-actions>
-            <v-btn flat dark>Start Processing</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-hover>
-    </v-flex>
-    <v-flex xs12 class="pa-1">
       <loading v-if="isBusy"/>
     </v-flex>
   </v-layout>
@@ -117,20 +96,9 @@ export default {
   components: {
     Loading
   },
-  watch: {
-    latexFile(newValue) {
-      if (newValue) {
-        this.$store.dispatch("setBusy", true)
-        this.$store.dispatch("processLatexFile")
-      }
-    }
-  },
   computed: {
     isBusy() {
       return this.$store.getters.isBusy
-    },
-    latexFile() {
-      return this.$store.getters.getLatexFilename
     }
   },
   methods: {
@@ -148,9 +116,6 @@ export default {
     },
     startover() {
       this.$emit("nexttab", this.tabindex)
-    },
-    processexam() {
-      this.download()
     }
   }
 }

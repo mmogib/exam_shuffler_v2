@@ -1,6 +1,6 @@
 {
   "name": "exam_shuffler_v2",
-  "version": "2.1.11",
+  "version": "2.1.13",
   "private": true,
   "description": "This is an application that shuffls questions of MCQ questions.",
   "author": "Mohammed Alshaharni",

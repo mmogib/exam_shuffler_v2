@@ -19,19 +19,16 @@
         <add-question :question="question" :numOfAnswers="numOfAnswers" @addQuestion="addQuestion"/>
       </v-flex>
       <v-flex xs12>
-        <p class="font-weight-medium">
-          If you need to add a figure, please 
+        <div class="font-weight-medium">If you need to add a figure, please
           <ol>
-            <li>
-              add this in the premable part (next page) of the latex document.
+            <li>add this in the premable part (next page) of the latex document.
               <pre>
 \usepackage[overlay]{textpos}
 \setlength{\TPHorizModule}{1mm}
 \setlength{\TPVertModule}{1mm}
               </pre>
             </li>
-            <li>
-              in the question body add 
+            <li>in the question body add
               <pre>
 In the figure,
 \begin{textblock}{50}(90,1) % 90 is x coordinate, 1 is y coordinate
@@ -39,8 +36,8 @@ In the figure,
 \end{textblock}
               </pre>
             </li>
-            </ol> 
-        </p>
+          </ol>
+        </div>
       </v-flex>
     </v-layout>
     <v-layout row wrap>
@@ -75,23 +72,21 @@ In the figure,
 </template>
 
 <script>
-import { validationMixin } from 'vuelidate'
-import { integer, minValue } from 'vuelidate/lib/validators'
+import { validationMixin } from "vuelidate"
+import { integer, minValue } from "vuelidate/lib/validators"
 
-import AddGroup from '@/components/AddGroup.vue'
-import AddQuestion from '@/components/AddQuestion.vue'
-import QuestionsList from '@/components/QuestionsList.vue'
-import GroupList from '@/components/GroupList.vue'
-/*
-const code = {
-  settings,
-  config,
-  questions: [],
-  master: false,
-  versionName: "",
-  numOfPages: 0
+import AddGroup from "@/components/AddGroup.vue"
+import AddQuestion from "@/components/AddQuestion.vue"
+import QuestionsList from "@/components/QuestionsList.vue"
+import GroupList from "@/components/GroupList.vue"
+
+const default_question = {
+  index: 0,
+  questionBody: "",
+  options: [],
+  pinned: false
 }
-*/
+
 export default {
   mixins: [validationMixin],
 
@@ -104,13 +99,13 @@ export default {
     AddQuestion,
     GroupList
   },
-  props: ['tabindex'],
+  props: ["tabindex"],
   data: () => ({
     numOfAnswers: 0,
     questions: [],
     question: {
       index: 0,
-      questionBody: '',
+      questionBody: "",
       options: [],
       pinned: false
     },
@@ -141,7 +136,7 @@ export default {
       const errors = []
       if (!this.$v.numOfAnswers.$dirty) return errors
       if (!this.$v.numOfAnswers.integer || !this.$v.numOfAnswers.minValue) {
-        errors.push('Number of Answers must be an integer greater than 1')
+        errors.push("Number of Answers must be an integer greater than 1")
       }
       return errors
     }
@@ -185,7 +180,10 @@ export default {
           this.addnewgroup(qs)
         }
 
-        const qsgrouped = this.examGroups.reduce((a, b) => parseInt(a) + parseInt(b.noq), 0)
+        const qsgrouped = this.examGroups.reduce(
+          (a, b) => parseInt(a) + parseInt(b.noq),
+          0
+        )
         if (qs !== qsgrouped || qs === 0) {
           this.groupsError = true
           this.saving = true
@@ -204,20 +202,20 @@ export default {
             config,
             questions: this.questions,
             master: true,
-            versionName: 'MASTER',
+            versionName: "MASTER",
             numOfPages: Math.ceil(this.questions.length / 2)
           })
           const examToSave = {
             exam: { ...exam, codes, config }
           }
           const currentExam = { ...this.getCurrentExam(), ...examToSave }
-          this.$store.dispatch('setCurrentExam', currentExam)
-          this.$emit('nexttab', this.tabindex)
+          this.$store.dispatch("setCurrentExam", currentExam)
+          this.$emit("nexttab", this.tabindex)
         }
       }
     },
     cancel() {
-      this.$emit('cancel')
+      this.$emit("cancel")
     },
     clear() {
       this.$v.$reset()
@@ -236,7 +234,7 @@ export default {
       const { numOfQuestions, numOfAnswers, examGroups } = exam.config
       const { codes } = exam
       if (codes.length > 0) {
-        this.questions = codes[0]['questions']
+        this.questions = codes[0]["questions"]
       }
       this.numOfAnswers = numOfAnswers
       this.examGroups = examGroups

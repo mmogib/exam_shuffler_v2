@@ -176,6 +176,7 @@ export default {
       this.TimeAllowed = TimeAllowed
       this.courseCode = courseCode
       this.examTitle = examTitle
+      this.examDate = examDate
       this.numOfVersions = numOfVersions
     }
   },

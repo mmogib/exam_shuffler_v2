@@ -21,7 +21,7 @@
           <v-flex xs12 v-for="i in numOfAnswers" :key="i">
             <v-textarea
               :label="`Option ${i}`"
-              :hint="i===1? 'Correct Answr': ''"
+              :hint="i===1? 'Correct Answer': ''"
               rows="2"
               v-model="options[i-1]"
             ></v-textarea>

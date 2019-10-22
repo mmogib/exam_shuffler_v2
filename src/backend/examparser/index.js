@@ -262,8 +262,10 @@ const shuffle_questions_ingroups = (qs, groups) => {
 export const shuffle_exam = obj => {
   const { config, codes } = obj
   const { numOfVersions, examGroups } = config
-  const versions = new Array(numOfVersions).fill(0, 0, numOfVersions).map((val, i) => {
+  const versionsTemp = new Array(parseInt(numOfVersions)).fill(0, 0, parseInt(numOfVersions))
+  const versions = versionsTemp.map((val, i) => {
     const versionName = 'CODE' + String(100 + i + 1).substr(1, 2)
+
     const qs = shuffle_options(codes[0].questions)
     const questions = shuffle_questions_ingroups(qs, examGroups)
     return {
@@ -307,14 +309,14 @@ export const add_answer_key = (exam, partials) => {
     '| \n'
   let tableRows =
     'Q & MASTER &' +
-    new Array(numOfVersions)
-      .fill(0, 0, numOfVersions)
+    new Array(parseInt(numOfVersions))
+      .fill(0, 0, parseInt(numOfVersions))
       .map((v, i) => {
         return 'CODE' + String(100 + i + 1).substr(1, 2)
       })
       .join('&') +
     ' \\\\ \\hline \n'
-  const qIterators = new Array(numOfQuestions).fill(0, 0, numOfQuestions)
+  const qIterators = new Array(parseInt(numOfQuestions)).fill(0, 0, parseInt(numOfQuestions))
   qIterators.forEach((v, i) => {
     tableRows +=
       `${i + 1} & ` +
@@ -346,8 +348,8 @@ export const add_answer_counts = (exam, partials) => {
   } = exam
   const tableHeader =
     '|c||' +
-    new Array(numOfAnswers)
-      .fill(0, 0, numOfAnswers)
+    new Array(parseInt(numOfAnswers))
+      .fill(0, 0, parseInt(numOfAnswers))
       .map(() => {
         return 'c'
       })
@@ -355,15 +357,15 @@ export const add_answer_counts = (exam, partials) => {
     '| \n'
   let tableRows =
     'V & ' +
-    new Array(numOfAnswers)
-      .fill(0, 0, numOfAnswers)
+    new Array(parseInt(numOfAnswers))
+      .fill(0, 0, parseInt(numOfAnswers))
       .map((v, i) => {
         return alphabets[i]
       })
       .join('&') +
     ' \\\\ \\hline \n'
 
-  const qIterators = new Array(numOfVersions).fill(0, 0, numOfVersions)
+  const qIterators = new Array(parseInt(numOfVersions)).fill(0, 0, parseInt(numOfVersions))
   qIterators.forEach((v, i) => {
     tableRows +=
       `${i + 1} & ` +

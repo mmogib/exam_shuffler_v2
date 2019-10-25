@@ -7,6 +7,7 @@
       <question-body
         :options="question.options.map(val=>val.text)"
         :pins="question.options.map(val=>val.pinned)"
+        :corrects="question.options.map(val=>val.correct)"
         :question="question"
         :numOfAnswers="numOfAnswers"
         @saveQuestion="save"

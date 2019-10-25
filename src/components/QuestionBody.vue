@@ -26,6 +26,7 @@
               v-model="options[i-1]"
             ></v-textarea>
             <v-switch :label="`Fix Order`" v-model="pins[i-1]" class="right ma-0 pa-0"></v-switch>
+            <v-switch :label="`Correct`" v-model="corrects[i-1]" class="right ma-0 pa-0"></v-switch>
           </v-flex>
         </v-layout>
       </v-container>
@@ -44,6 +45,7 @@ export default {
     "question",
     "options",
     "pins",
+    "corrects",
     "numOfAnswers",
     "closeLabel",
     "saveLabel"
@@ -56,13 +58,15 @@ export default {
       this.question.options = []
       for (let i = 0; i < this.numOfAnswers; i++) {
         const questionOtion = {
-          correct: i === 0,
+          correct:
+            this.corrects.length > 0 ? this.corrects[i] || false : i === 0,
           text: this.options[i] || "",
           order: i,
           pinned: this.pins[i] || false
         }
         this.question.options.push(questionOtion)
       }
+
       this.$emit("saveQuestion", this.question)
     }
   }

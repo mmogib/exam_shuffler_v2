@@ -16,19 +16,22 @@
         ></v-text-field>
       </v-flex>
       <v-flex xs12>
-        <add-question :question="question" :numOfAnswers="numOfAnswers" @addQuestion="addQuestion"/>
+        <add-question :question="question" :numOfAnswers="numOfAnswers" @addQuestion="addQuestion" />
       </v-flex>
       <v-flex xs12>
-        <div class="font-weight-medium">If you need to add a figure, please
+        <div class="font-weight-medium">
+          If you need to add a figure, please
           <ol>
-            <li>add this in the premable part (next page) of the latex document.
+            <li>
+              add this in the premable part (next page) of the latex document.
               <pre>
 \usepackage[overlay]{textpos}
 \setlength{\TPHorizModule}{1mm}
 \setlength{\TPVertModule}{1mm}
               </pre>
             </li>
-            <li>in the question body add
+            <li>
+              in the question body add
               <pre>
 In the figure,
 \begin{textblock}{50}(90,1) % 90 is x coordinate, 1 is y coordinate
@@ -54,10 +57,10 @@ In the figure,
         />
       </v-flex>
       <v-flex xs12>
-        <add-group v-if="numOfQuestions>0" @newgroup="addnewgroup"/>
+        <add-group v-if="numOfQuestions>0" @newgroup="addnewgroup" />
       </v-flex>
       <v-flex xs12>
-        <group-list :examGroups="examGroups" :groupsError="groupsError" @removegroup="removegroup"/>
+        <group-list :examGroups="examGroups" :groupsError="groupsError" @removegroup="removegroup" />
       </v-flex>
     </v-layout>
 

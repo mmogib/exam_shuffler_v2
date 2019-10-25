@@ -12,6 +12,7 @@
             <question-body
               :options="item.options.map(val=>val.text)"
               :pins="item.options.map(val=>val.pinned)"
+              :corrects="item.options.map(val=>val.correct)"
               :question="item"
               :numOfAnswers="numOfAnswers"
               :closeLabel="'delete'"

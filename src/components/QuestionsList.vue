@@ -9,10 +9,11 @@
         <v-expansion-panel v-model="panel" popout expand>
           <v-expansion-panel-content v-for="(item,i) in questions" :key="i">
             <div slot="header">Question {{i+1}}</div>
+
             <question-body
               :options="item.options.map(val=>val.text)"
               :pins="item.options.map(val=>val.pinned)"
-              :corrects="item.options.map(val=>val.correct)"
+              :correctIndex="item.options.filter(v=>v.correct)[0].order+1"
               :question="item"
               :numOfAnswers="numOfAnswers"
               :closeLabel="'delete'"

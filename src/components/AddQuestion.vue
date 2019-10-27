@@ -1,13 +1,15 @@
 <template>
   <v-layout row justify-center>
     <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-      <v-btn slot="activator" small color="green" class="white--text">Add new question
+      <v-btn slot="activator" small color="green" class="white--text">
+        Add new question
         <v-icon dark>add</v-icon>
       </v-btn>
+
       <question-body
         :options="question.options.map(val=>val.text)"
         :pins="question.options.map(val=>val.pinned)"
-        :corrects="question.options.map(val=>val.correct)"
+        :correctIndex="1"
         :question="question"
         :numOfAnswers="numOfAnswers"
         @saveQuestion="save"

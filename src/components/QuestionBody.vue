@@ -16,17 +16,31 @@
           <v-flex xs12>
             <v-textarea v-model="question.questionBody" box label="Question" auto-grow></v-textarea>
           </v-flex>
+          <v-flex xs12>
+            <v-card color="purple darken-2" dark>
+              <v-card-title>Correct Answer</v-card-title>
+              <v-card-text>
+                <v-radio-group v-model="localCorrectIndex" row>
+                  <v-radio
+                    v-for="i in numOfAnswers"
+                    :key="`c${i}`"
+                    :label="`Option ${i}`"
+                    :value="i"
+                  />
+                </v-radio-group>
+              </v-card-text>
+            </v-card>
+          </v-flex>
         </v-layout>
         <v-layout row wrap>
           <v-flex xs12 v-for="i in numOfAnswers" :key="i">
             <v-textarea
               :label="`Option ${i}`"
-              :hint="i===1? 'Correct Answer': ''"
+              :hint="i===localCorrectIndex? 'Correct Answer': ''"
               rows="2"
               v-model="options[i-1]"
             ></v-textarea>
             <v-switch :label="`Fix Order`" v-model="pins[i-1]" class="right ma-0 pa-0"></v-switch>
-            <v-switch :label="`Correct`" v-model="corrects[i-1]" class="right ma-0 pa-0"></v-switch>
           </v-flex>
         </v-layout>
       </v-container>
@@ -45,11 +59,16 @@ export default {
     "question",
     "options",
     "pins",
-    "corrects",
+    "correctIndex",
     "numOfAnswers",
     "closeLabel",
     "saveLabel"
   ],
+  data: function() {
+    return {
+      localCorrectIndex: parseInt(this.correctIndex)
+    }
+  },
   methods: {
     closeIt() {
       this.$emit("close", this.question)
@@ -58,8 +77,7 @@ export default {
       this.question.options = []
       for (let i = 0; i < this.numOfAnswers; i++) {
         const questionOtion = {
-          correct:
-            this.corrects.length > 0 ? this.corrects[i] || false : i === 0,
+          correct: this.localCorrectIndex === i + 1,
           text: this.options[i] || "",
           order: i,
           pinned: this.pins[i] || false

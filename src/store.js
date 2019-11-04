@@ -60,6 +60,7 @@ export default new Vuex.Store({
       dispatch('setBusy', true)
       dispatch('setUpdateAvailable', false)
       dispatch('setDownloading', false)
+      ipc.on('log-exam', (_, exam) => console.log(exam))
       ipc.on('state-initiated', (e, { default_exam, setting, projects }) => {
         dispatch('setDefaultExam', default_exam)
         dispatch('setSetting', setting)

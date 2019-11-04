@@ -167,6 +167,7 @@ ipc.on('get-init-state', async e => {
 
 const donwloadexam = async (e, examObj, examplePartials) => {
   const exam = shuffle_exam(examObj)
+  //e.sender.send('log-exam', exam.codes[0])
   const partials = add_answer_counts(exam, add_answer_key(exam, examplePartials))
   const saveFile = promisify(writeFile)
   try {

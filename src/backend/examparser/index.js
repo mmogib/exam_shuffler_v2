@@ -275,8 +275,27 @@ export const shuffle_exam = obj => {
       master: false
     }
   })
+  const newcodes = codes.map((c, i) => {
+    if (i === 0) {
+      return {
+        ...c,
+        questions: c.questions.map(q => ({
+          ...q,
+          options: q.options.map(o => {
+            if (o.correct) {
+              return { ...o, text: `${o.text} \\hfill {\\tiny (correct) }` }
+            } else {
+              return o
+            }
+          })
+        }))
+      }
+    } else {
+      return c
+    }
+  })
 
-  return { ...obj, codes: [...codes, ...versions] }
+  return { ...obj, codes: [...newcodes, ...versions] }
 }
 
 // exm->partials -> partials
